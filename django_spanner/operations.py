@@ -6,6 +6,7 @@
 
 import os
 import re
+import json
 from base64 import b64decode
 from datetime import datetime, time
 from uuid import UUID
@@ -307,6 +308,8 @@ class DatabaseOperations(BaseDatabaseOperations):
             converters.append(self.convert_binaryfield_value)
         elif internal_type == "UUIDField":
             converters.append(self.convert_uuidfield_value)
+        elif internal_type == "JSONField":
+            converters.append(self.convert_jsonfield_value)
         return converters
 
     def convert_binaryfield_value(self, value, expression, connection):
@@ -403,6 +406,31 @@ class DatabaseOperations(BaseDatabaseOperations):
         """
         if value is not None:
             value = UUID(value)
+        return value
+
+    def convert_jsonfield_value(self, value, expression, connection):
+        """Convert Spanner JSONField value for Django.
+
+        :type value: JsonObject, JsonArray, dict, list, str
+        :param value: A JSON value.
+
+        :type expression: :class:`django.db.models.expressions.BaseExpression`
+        :param expression: A query expression.
+
+        :type connection: :class:`~google.cloud.cpanner_dbapi.connection.Connection`
+        :param connection: Reference to a Spanner database connection.
+
+        :rtype: str
+        :returns: A JSON string.
+        """
+        if value is None:
+            return value
+        # Spanner DB API returns JsonObject/JsonArray for JSON types,
+        # but Django's JSONField.from_db_value expects a string to decode.
+        if hasattr(value, "serialize"):
+            return value.serialize()
+        if not isinstance(value, str):
+            return json.dumps(value)
         return value
 
     def date_extract_sql(self, lookup_type, field_name, params=None):

@@ -169,6 +169,9 @@ class TestUtils(SpannerSimpleTestClass):
                     ["pk_constraint", "PRIMARY KEY"],
                     ["FOREIGN KEY", "dept_id"],
                 ]
+            # returns dummy data for 'CONSTRAINT_TYPE='FOREIGN KEY'' query.
+            if "CONSTRAINT_TYPE='FOREIGN KEY'" in args[0]:
+                return [["FOREIGN KEY", "dept", "id"]]
             # returns dummy data for 'INFORMATION_SCHEMA.INDEXES' table query.
             return [["pk_index", "id", "ASCENDING", "PRIMARY_KEY", True]]
 
@@ -203,7 +206,7 @@ class TestUtils(SpannerSimpleTestClass):
                 "FOREIGN KEY": {
                     "check": False,
                     "columns": [],
-                    "foreign_key": None,
+                    "foreign_key": ("dept", "id"),
                     "index": False,
                     "orders": [],
                     "primary_key": False,

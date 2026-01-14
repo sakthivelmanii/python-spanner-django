@@ -451,6 +451,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "migrations.test_operations.OperationTests.test_rename_model_with_self_referential_m2m",
             "migrations.test_operations.OperationTests.test_rename_model_with_superclass_fk",
             "migrations.test_operations.OperationTests.test_repoint_field_m2m",
+            "migrations.test_operations.OperationTests.test_smallfield_bigautofield_foreignfield_growth",
             "migrations.test_operations.OperationTests.test_run_sql_params",
             # Model Fields
             "model_fields.test_autofield.AutoFieldTests.test_backend_range_validation",

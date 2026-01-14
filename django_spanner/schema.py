@@ -176,6 +176,38 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         :param model: A model for creating a table.
         """
         # Spanner requires to drop foreign keys before dropping the table.
+        with self.connection.cursor() as cursor:
+            schema_name = self.connection.introspection._get_schema_name(cursor)
+            incoming_fks = cursor.execute(
+                """
+                SELECT
+                    tc.TABLE_NAME, tc.CONSTRAINT_NAME
+                FROM
+                    INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc
+                JOIN
+                    INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS as rc
+                ON
+                    tc.CONSTRAINT_NAME = rc.CONSTRAINT_NAME
+                JOIN
+                    INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE as ccu
+                ON
+                    rc.UNIQUE_CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
+                WHERE
+                    ccu.TABLE_NAME=%s AND ccu.TABLE_SCHEMA=%s AND tc.CONSTRAINT_TYPE='FOREIGN KEY'
+                """,
+                [model._meta.db_table, schema_name],
+            )
+            incoming_fks = cursor.fetchall()
+
+        for table_name, constraint_name in incoming_fks:
+            self.execute(
+                self.sql_delete_fk
+                % {
+                    "table": self.quote_name(table_name),
+                    "name": self.quote_name(constraint_name),
+                }
+            )
+
         fk_names = self._constraint_names(model, foreign_key=True)
         for fk_name in fk_names:
             self.execute(

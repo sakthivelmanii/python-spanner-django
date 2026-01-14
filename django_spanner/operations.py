@@ -22,6 +22,7 @@ from google.cloud.spanner_dbapi.parse_utils import (
     TimestampStr,
     escape_name,
 )
+from google.cloud.spanner_v1.data_types import JsonObject
 
 
 class DatabaseOperations(BaseDatabaseOperations):
@@ -432,6 +433,17 @@ class DatabaseOperations(BaseDatabaseOperations):
         if not isinstance(value, str):
             return json.dumps(value)
         return value
+
+
+    def adapt_json_value(self, value, encoder):
+        """Adapt JSON value for Spanner.
+
+        Spanner's DB API handles Python objects (dict/list) as JSON,
+        so we should NOT dump them to a string (which BaseDatabaseOperations does).
+        """
+        if value is None:
+            return None
+        return JsonObject(value)
 
     def date_extract_sql(self, lookup_type, field_name, params=None):
         """Extract date from the lookup.

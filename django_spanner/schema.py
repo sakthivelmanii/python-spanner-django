@@ -191,7 +191,11 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         index_names = self._constraint_names(
             model, index=True, primary_key=False
         )
-        for index_name in index_names:
+        unique_names = self._constraint_names(
+            model, unique=True, primary_key=False
+        )
+        all_names = set(index_names) | set(unique_names)
+        for index_name in all_names:
             trace_attributes = {
                 "model_name": self.quote_name(model._meta.db_table),
                 "index_name": index_name,

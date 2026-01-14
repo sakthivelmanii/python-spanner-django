@@ -42,9 +42,6 @@ from .version import __version__
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 
 
-USING_DJANGO_5 = False
-if django.VERSION[0] >= 5:
-    USING_DJANGO_5 = True
 
 from django.db.models.fields import (
     SmallAutoField,

@@ -2399,4 +2399,5 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "order_with_respect_to.base_tests.BaseOrderWithRespectToTests.test_delete_and_insert",
             "order_with_respect_to.base_tests.BaseOrderWithRespectToTests.test_database_routing",
         )
+    # Spanner does not support columns starting with underscore (e.g. _order).
     supports_order_with_respect_to = False

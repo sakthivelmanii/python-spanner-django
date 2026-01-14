@@ -55,7 +55,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "SmallIntegerField": "INT64",
         "TextField": "STRING(MAX)",
         "TimeField": "TIMESTAMP",
-        "UUIDField": "STRING(32)",
+        "UUIDField": "STRING(32)",  # Django 5.2: Use STRING(32) for UUIDs
     }
     operators = {
         "exact": "= %s",

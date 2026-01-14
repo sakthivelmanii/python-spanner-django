@@ -100,6 +100,8 @@ class DatabaseOperations(BaseDatabaseOperations):
 
         :rtype: int
         :returns: The maximum number of objects in a batch.
+
+        Spanner has a limit of 1000 parameters per query.
         """
         if not fields:
             return self.connection.features.max_query_params

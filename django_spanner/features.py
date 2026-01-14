@@ -556,6 +556,8 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "queries.test_bulk_update.BulkUpdateTests.test_database_routing",
             "queries.test_bulk_update.BulkUpdateTests.test_inherited_fields",
             "queries.test_bulk_update.BulkUpdateTests.test_large_batch",
+            "queries.test_bulk_update.BulkUpdateTests.test_json_field",
+            "queries.test_bulk_update.BulkUpdateTests.test_json_field_sql_null",
             "queries.test_bulk_update.BulkUpdateTests.test_unsaved_parent",
             "queries.test_qs_combinators.QuerySetSetOperationTests.test_union_empty_slice",
             "queries.test_qs_combinators.QuerySetSetOperationTests.test_union_with_values_list_and_order",

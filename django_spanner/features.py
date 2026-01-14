@@ -31,7 +31,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_select_for_update_with_limit = False
     supports_sequence_reset = False
     supports_timezones = False
-    supports_transactions = False
+    supports_transactions = True
     supports_json_field = True
     supports_column_check_constraints = True
     supports_table_check_constraints = True

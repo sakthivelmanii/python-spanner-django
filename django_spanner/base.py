@@ -9,6 +9,7 @@ import os
 from google.cloud import spanner
 
 from django.db.backends.base.base import BaseDatabaseWrapper
+from django.db.utils import DatabaseError
 from google.cloud import spanner_dbapi
 
 from .client import DatabaseClient
@@ -197,6 +198,16 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         """
         with self.wrap_database_errors:
             self.connection.autocommit = autocommit
+
+    def _rollback(self):
+        try:
+            super()._rollback()
+        except DatabaseError:
+            # Spanner does not allow rolling back a transaction that has
+            # already been aborted. If rollback fails, we can assume the
+            # transaction is logically closed, so we suppress the error
+            # to allow Django to reset the transaction state (needs_rollback=False).
+            pass
 
     def is_usable(self):
         """Check whether the connection is valid.

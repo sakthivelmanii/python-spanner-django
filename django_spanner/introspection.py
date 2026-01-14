@@ -244,11 +244,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         for constraint, constraint_type in constraint_types:
             already_added = constraint in constraints
             if constraint_type == "FOREIGN KEY":
-                # We don't yet support anything related to FOREIGN KEY.
-                # See https://github.com/googleapis/python-spanner-django/issues/313.
-                if already_added:
-                    del constraints[constraint]
-                continue
+                pass
 
             if not already_added:
                 constraints[constraint] = {
@@ -317,6 +313,40 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
                 index_type if is_primary_key else Index.suffix
             )
             constraints[index_name]["unique"] = is_unique
+
+        # Add foreign keys.
+        foreign_keys = cursor.run_sql_in_snapshot(
+            """
+            SELECT
+                tc.CONSTRAINT_NAME, ccu.TABLE_NAME, ccu.COLUMN_NAME
+            FROM
+                INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc
+            JOIN
+                INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS as rc
+            ON
+                tc.CONSTRAINT_NAME = rc.CONSTRAINT_NAME
+            JOIN
+                INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE as ccu
+            ON
+                rc.UNIQUE_CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
+            WHERE
+                tc.TABLE_NAME=@table AND tc.TABLE_SCHEMA=@schema_name AND tc.CONSTRAINT_TYPE='FOREIGN KEY'
+            """,
+            params={"table": table_name, "schema_name": schema_name},
+        )
+        for constraint, other_table, other_column in foreign_keys:
+            if constraint not in constraints:
+                constraints[constraint] = {
+                    "check": False,
+                    "columns": [],
+                    "foreign_key": None,
+                    "index": False,
+                    "orders": [],
+                    "primary_key": False,
+                    "type": None,
+                    "unique": False,
+                }
+            constraints[constraint]["foreign_key"] = (other_table, other_column)
 
         return constraints
 

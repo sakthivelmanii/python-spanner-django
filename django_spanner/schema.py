@@ -52,50 +52,8 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     # This can cause failures in django, hence sql_create_inline_fk is disabled.
     # sql_create_inline_fk = "CONSTRAINT FK_%(to_table)s_%(to_column)s_%(from_table)s_%(from_column)s FOREIGN KEY (%(from_column_norm)s) REFERENCES %(to_table_norm)s  (%(to_column_norm)s)"  # noqa
     sql_create_inline_fk = None
+    sql_delete_fk = "ALTER TABLE %(table)s DROP CONSTRAINT %(name)s"
 
-    def execute(self, sql, params=()):
-        # Spanner requires to drop indices before table.
-        # This catches "DROP TABLE" statements (e.g. from cleanup_test_tables)
-        # and manually drops indices first.
-        sql_str = str(sql).strip()
-        if sql_str.upper().startswith("DROP TABLE") and not params:
-            try:
-                # Extract table name (simplified parsing)
-                parts = sql_str.split()
-                if len(parts) >= 3:
-                    table_name = parts[2]
-                    # remove trailing semicolon
-                    if table_name.endswith(";"):
-                        table_name = table_name[:-1]
-                    # remove quotes
-                    if (
-                        table_name.startswith("`") and table_name.endswith("`")
-                    ) or (
-                        table_name.startswith('"') and table_name.endswith('"')
-                    ) or (
-                        table_name.startswith("'") and table_name.endswith("'")
-                    ):
-                        table_name = table_name[1:-1]
-
-                    with self.connection.cursor() as cursor:
-                        constraints = (
-                            self.connection.introspection.get_constraints(
-                                cursor, table_name
-                            )
-                        )
-                        for name, infodict in constraints.items():
-                            if (
-                                infodict["index"]
-                                and not infodict["primary_key"]
-                            ):
-                                drop_sql = "DROP INDEX %s" % self.quote_name(
-                                    name
-                                )
-                                super().execute(drop_sql, [])
-            except Exception:
-                pass
-
-        super().execute(sql, params)
 
     def create_model(self, model):
         """
@@ -220,6 +178,17 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         :type model: :class:`~django.db.migrations.operations.models.ModelOperation`
         :param model: A model for creating a table.
         """
+        # Spanner requires to drop foreign keys before dropping the table.
+        fk_names = self._constraint_names(model, foreign_key=True)
+        for fk_name in fk_names:
+            self.execute(
+                self.sql_delete_fk
+                % {
+                    "table": self.quote_name(model._meta.db_table),
+                    "name": self.quote_name(fk_name),
+                }
+            )
+
         # Spanner requires dropping all of a table's indexes before dropping
         # the table.
         index_names = self._constraint_names(

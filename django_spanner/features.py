@@ -24,6 +24,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     # https://cloud.google.com/spanner/quotas#query_limits
     max_query_params = 900
     supports_foreign_keys = True
+    supports_forward_references = False
     can_create_inline_fk = False
     supports_ignore_conflicts = False
     supports_partial_indexes = False
@@ -655,6 +656,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "test_utils.tests.CaptureOnCommitCallbacksTests.test_no_arguments",
             "test_utils.tests.CaptureOnCommitCallbacksTests.test_pre_callback",
             "test_utils.tests.CaptureOnCommitCallbacksTests.test_using",
+            "test_utils.tests.CaptureOnCommitCallbacksTests.test_with_rolled_back_savepoint",
             "test_utils.tests.TestBadSetUpTestData.test_failure_in_setUpTestData_should_rollback_transaction",
             # Timezones
             "timezones.tests.AdminTests.test_change_editable",
@@ -761,6 +763,8 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "admin_changelist.tests.ChangeListTests.test_total_ordering_optimization_meta_constraints",
             "admin_changelist.tests.ChangeListTests.test_tuple_list_display",
             "admin_changelist.tests.GetAdminLogTests.test_no_user",
+            # Admin Changelist Atomicity
+            "admin_changelist.tests.ChangeListTests.test_list_editable_atomicity",
             # Admin Custom Urls
             "admin_custom_urls.tests.AdminCustomUrlsTest.test_add_with_GET_args",
             "admin_custom_urls.tests.AdminCustomUrlsTest.test_admin_URLs_no_clash",
@@ -2178,8 +2182,18 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "sessions_tests.tests.CustomDatabaseSessionTests.test_invalid_key",
             "sessions_tests.tests.CustomDatabaseSessionTests.test_save",
             "sessions_tests.tests.CustomDatabaseSessionTests.test_save_doesnt_clear_data",
-            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_get_decoded",
-            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_get_decode",
+            # Sessions
+            "sessions_tests.tests.CacheDBSessionTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.CacheDBSessionTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.CacheDBSessionWithTimeZoneTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.CacheDBSessionWithTimeZoneTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.DatabaseSessionTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.DatabaseSessionTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.DatabaseSessionWithTimeZoneTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
+            "sessions_tests.tests.DatabaseSessionWithTimeZoneTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
+            # Sites Tests
             "sessions_tests.tests.CustomDatabaseSessionTests.test_session_str",
             "sessions_tests.tests.CustomDatabaseSessionTests.test_sessionmanager_save",
             "sessions_tests.tests.SessionMiddlewareTests.test_empty_session_saved",

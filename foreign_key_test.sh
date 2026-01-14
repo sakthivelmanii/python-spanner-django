@@ -80,6 +80,7 @@ DATABASES = {
         'PROJECT': PROJECT,
         'INSTANCE': INSTANCE,
         'NAME': DB_NAME,
+        'OPTIONS': {'use_native_uuid': True},
     }
 }
 EOF

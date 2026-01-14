@@ -113,6 +113,15 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     ops_class = DatabaseOperations
     client_class = DatabaseClient
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Create a copy to avoid modifying the class attribute for all instances
+        self.data_types = self.data_types.copy()
+
+        options = self.settings_dict.get("OPTIONS", {})
+        if options.get("use_native_uuid"):
+            self.data_types["UUIDField"] = "UUID"
+
     @property
     def instance(self):
         """Reference to a Cloud Spanner Instance containing the Database.

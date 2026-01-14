@@ -1063,7 +1063,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_matches_user_model",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_both_passwords",
 
-            "auth_tests.test_forms.BaseUserCreationFormTest.test_custom_form_with_different_username_field",
+            "auth_tests.test_forms.CustomUserCreationFormTest.test_custom_form_with_different_username_field",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_duplicate_normalized_unicode",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_html_autocomplete_attributes",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_invalid_data",

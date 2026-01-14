@@ -187,7 +187,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_func_with_timezone",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_iso_weekday_func",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_lookup_name_sql_injection",
-            "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_ambiguous_and_invalid_times",
+
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_func_with_timezone",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_lookup_name_sql_injection",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_time_comparison",
@@ -394,6 +394,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # M2M Recursive
             "m2m_recursive.tests.RecursiveM2MTests.test_recursive_m2m_all",
             "m2m_recursive.tests.RecursiveM2MTests.test_recursive_m2m_reverse_add",
+            "m2m_recursive.tests.RecursiveM2MTests.test_recursive_m2m_remove",
             "m2m_recursive.tests.RecursiveSymmetricalM2MThroughTests.test_recursive_m2m_all",
             "m2m_recursive.tests.RecursiveSymmetricalM2MThroughTests.test_recursive_m2m_remove",
             # M2M Through
@@ -616,7 +617,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # Select Related
             "select_related.tests.SelectRelatedTests.test_field_traversal",
             # Select Related Regress
-            "select_related_regress.tests.RegressionTests.test_regression_7110",
+            "select_related_regress.tests.SelectRelatedRegressTests.test_regression_7110",
             # Serializers
             "serializers.test_data.SerializerDataTests.test_json_serializer",
             "serializers.test_data.SerializerDataTests.test_python_serializer",
@@ -1056,7 +1057,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_defaults_to_254",
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_matches_user_model",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_both_passwords",
-            "auth_tests.test_forms.BaseUserCreationFormTest.test_custom_form_hidden_username_field",
+
             "auth_tests.test_forms.BaseUserCreationFormTest.test_custom_form_with_different_username_field",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_duplicate_normalized_unicode",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_html_autocomplete_attributes",
@@ -1608,6 +1609,9 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "fixtures.tests.ForwardReferenceTests.test_forward_reference_fk",
             "fixtures.tests.ForwardReferenceTests.test_forward_reference_m2m",
             "fixtures.tests.TestCaseFixtureLoadingTests.test_class_fixtures",
+            "fixtures.tests.CircularReferenceTests.test_circular_reference",
+            "fixtures.tests.FixtureLoadingTests.test_loaddata_app_option",
+            "fixtures.tests.FixtureLoadingTests.test_unmatched_identifier_loading",
             # Fixtures Model Package
             "fixtures_model_package.tests.FixtureTestCase.test_loaddata",
             # Flatpages Tests
@@ -2182,7 +2186,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "sessions_tests.tests.CustomDatabaseSessionTests.test_invalid_key",
             "sessions_tests.tests.CustomDatabaseSessionTests.test_save",
             "sessions_tests.tests.CustomDatabaseSessionTests.test_save_doesnt_clear_data",
-            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_get_decode",
+            "sessions_tests.tests.CustomDatabaseSessionTests.test_session_get_decoded",
             # Sessions
             "sessions_tests.tests.CacheDBSessionTests.test_session_asave_does_not_resurrect_session_logged_out_in_other_context",
             "sessions_tests.tests.CacheDBSessionTests.test_session_save_does_not_resurrect_session_logged_out_in_other_context",
@@ -2237,13 +2241,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "sitemaps_tests.test_https.HTTPSSitemapTests.test_secure_sitemap_index",
             "sitemaps_tests.test_https.HTTPSSitemapTests.test_secure_sitemap_section",
 
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_exact_url",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_global",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_index",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_insecure",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_no_sites",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_get_sitemap_full_url_not_detected",
-            "sitemaps_tests.test_utils.PingGoogleTests.test_something",
+
             # String Lookup
             "string_lookup.tests.StringLookupTests.test_queries_on_textfields",
             # Test Client

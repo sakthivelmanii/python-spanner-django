@@ -85,6 +85,8 @@ class DatabaseOperations(BaseDatabaseOperations):
         """
         if os.environ.get("RUNNING_SPANNER_BACKEND_TESTS") == "1":
             name = name.replace(" ", "_").replace("-", "_")
+        if name.startswith("_"):
+            name = "vnd" + name
         return escape_name(name)
 
     def bulk_batch_size(self, fields, objs):

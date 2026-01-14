@@ -65,5 +65,5 @@ ENGINE = "django_spanner"
 PROJECT = "emulator-local"
 INSTANCE = "django-test-instance"
 NAME = "django_test_db"
-OPTIONS = {"use_native_uuid": True}
+OPTIONS = {}
 AUTOCOMMIT = True

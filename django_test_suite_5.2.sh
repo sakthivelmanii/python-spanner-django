@@ -61,14 +61,14 @@ DATABASES = {
        'PROJECT': "$PROJECT",
        'INSTANCE': "$INSTANCE",
        'NAME': "$TEST_DBNAME",
-       'OPTIONS': {'use_native_uuid': True},
+       'OPTIONS': {},
    },
    'other': {
        'ENGINE': 'django_spanner',
        'PROJECT': "$PROJECT",
        'INSTANCE': "$INSTANCE",
        'NAME': "$TEST_DBNAME_OTHER",
-       'OPTIONS': {'use_native_uuid': True},
+       'OPTIONS': {},
    },
 
 }

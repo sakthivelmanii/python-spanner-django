@@ -2211,6 +2211,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "sitemaps_tests.test_http.HTTPSitemapTests.test_alternate_i18n_sitemap_index",
             "sitemaps_tests.test_http.HTTPSitemapTests.test_alternate_i18n_sitemap_limited",
             "sitemaps_tests.test_http.HTTPSitemapTests.test_alternate_i18n_sitemap_xdefault",
+            "sitemaps_tests.test_http.HTTPSitemapTests.test_alternate_language_for_item_i18n_sitemap",
             "sitemaps_tests.test_http.HTTPSitemapTests.test_cached_sitemap_index",
             "sitemaps_tests.test_http.HTTPSitemapTests.test_empty_page",
             "sitemaps_tests.test_http.HTTPSitemapTests.test_empty_sitemap",

@@ -32,16 +32,9 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_sequence_reset = False
     supports_timezones = False
     supports_transactions = False
-    if USE_EMULATOR:
-        # Emulator does not support json.
-        supports_json_field = False
-        # Emulator does not support check constrints.
-        supports_column_check_constraints = False
-        supports_table_check_constraints = False
-    else:
-        supports_column_check_constraints = True
-        supports_table_check_constraints = True
-        supports_json_field = True
+    supports_json_field = True
+    supports_column_check_constraints = True
+    supports_table_check_constraints = True
     supports_primitives_in_json_field = False
     # Spanner does not support order by null modifiers.
     supports_order_by_nulls_modifier = False

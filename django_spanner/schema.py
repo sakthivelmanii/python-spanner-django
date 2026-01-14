@@ -9,7 +9,7 @@ import uuid
 from django.db import NotSupportedError
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 from django_spanner._opentelemetry_tracing import trace_call
-from django_spanner import USE_EMULATOR, USING_DJANGO_3
+from django_spanner import USE_EMULATOR
 
 
 class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
@@ -52,6 +52,50 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     # This can cause failures in django, hence sql_create_inline_fk is disabled.
     # sql_create_inline_fk = "CONSTRAINT FK_%(to_table)s_%(to_column)s_%(from_table)s_%(from_column)s FOREIGN KEY (%(from_column_norm)s) REFERENCES %(to_table_norm)s  (%(to_column_norm)s)"  # noqa
     sql_create_inline_fk = None
+
+    def execute(self, sql, params=()):
+        # Spanner requires to drop indices before table.
+        # This catches "DROP TABLE" statements (e.g. from cleanup_test_tables)
+        # and manually drops indices first.
+        sql_str = str(sql).strip()
+        if sql_str.upper().startswith("DROP TABLE") and not params:
+            try:
+                # Extract table name (simplified parsing)
+                parts = sql_str.split()
+                if len(parts) >= 3:
+                    table_name = parts[2]
+                    # remove trailing semicolon
+                    if table_name.endswith(";"):
+                        table_name = table_name[:-1]
+                    # remove quotes
+                    if (
+                        table_name.startswith("`") and table_name.endswith("`")
+                    ) or (
+                        table_name.startswith('"') and table_name.endswith('"')
+                    ) or (
+                        table_name.startswith("'") and table_name.endswith("'")
+                    ):
+                        table_name = table_name[1:-1]
+
+                    with self.connection.cursor() as cursor:
+                        constraints = (
+                            self.connection.introspection.get_constraints(
+                                cursor, table_name
+                            )
+                        )
+                        for name, infodict in constraints.items():
+                            if (
+                                infodict["index"]
+                                and not infodict["primary_key"]
+                            ):
+                                drop_sql = "DROP INDEX %s" % self.quote_name(
+                                    name
+                                )
+                                super().execute(drop_sql, [])
+            except Exception:
+                pass
+
+        super().execute(sql, params)
 
     def create_model(self, model):
         """
@@ -117,24 +161,14 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
             # Create a unique constraint separately because Spanner doesn't
             # allow them inline on a column.
             if field.unique and not field.primary_key:
-                if USING_DJANGO_3:
-                    self.deferred_sql.append(
-                        self._create_unique_sql(model, [field.column])
-                    )
-                else:
-                    self.deferred_sql.append(
-                        self._create_unique_sql(model, [field])
-                    )
+                self.deferred_sql.append(
+                    self._create_unique_sql(model, [field])
+                )
 
         # Add any unique_togethers (always deferred, as some fields might be
         # created afterwards, like geometry fields with some backends)
         for fields in model._meta.unique_together:
-            if USING_DJANGO_3:
-                columns = [
-                    model._meta.get_field(field).column for field in fields
-                ]
-            else:
-                columns = [model._meta.get_field(field) for field in fields]
+            columns = [model._meta.get_field(field) for field in fields]
             self.deferred_sql.append(self._create_unique_sql(model, columns))
         constraints = [
             constraint.constraint_sql(model, self)
@@ -290,14 +324,9 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         # Create a unique constraint separately because Spanner doesn't allow
         # them inline on a column.
         if field.unique and not field.primary_key:
-            if USING_DJANGO_3:
-                self.deferred_sql.append(
-                    self._create_unique_sql(model, [field.column])
-                )
-            else:
-                self.deferred_sql.append(
-                    self._create_unique_sql(model, [field])
-                )
+            self.deferred_sql.append(
+                self._create_unique_sql(model, [field])
+            )
         # Add any FK constraints later
         if (
             field.remote_field
@@ -554,27 +583,19 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         include=None,
         opclasses=None,
         expressions=None,
+        nulls_distinct=None,
     ):
         # Inline constraints aren't supported, so create the index separately.
-        if USING_DJANGO_3:
-            sql = self._create_unique_sql(
-                model,
-                fields,
-                name=name,
-                condition=condition,
-                include=include,
-                opclasses=opclasses,
-            )
-        else:
-            sql = self._create_unique_sql(
-                model,
-                fields,
-                name=name,
-                condition=condition,
-                include=include,
-                opclasses=opclasses,
-                expressions=expressions,
-            )
+        sql = self._create_unique_sql(
+            model,
+            fields,
+            name=name,
+            condition=condition,
+            include=include,
+            opclasses=opclasses,
+            expressions=expressions,
+            nulls_distinct=nulls_distinct,
+        )
         if sql:
             self.deferred_sql.append(sql)
         return None

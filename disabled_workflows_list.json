@@ -1,0 +1,39 @@
+[
+  {
+    "name": ".github/workflows/mockserver-tests.yml"
+  },
+
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator1.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator2.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator3.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator4.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator5.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator6.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator7.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator8.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/django5.2_tests_against_emulator9.yml.disabled"
+  },
+  {
+    "name": ".github/workflows/foreign_keys.yaml.disabled"
+  },
+  {
+    "name": ".github/workflows/integration-tests-against-emulator-3.10.yml.disabled"
+  }
+]

@@ -14,6 +14,10 @@
 
 import os
 import unittest
+from concurrent import futures
+import tests.mockserver_tests.spanner_pb2_grpc as spanner_grpc
+import tests.mockserver_tests.spanner_database_admin_pb2_grpc as database_admin_grpc
+import tests.mockserver_tests.spanner_instance_admin_pb2_grpc as instance_admin_grpc
 
 from django.db import connection, connections
 from google.cloud.spanner_dbapi.parsed_statement import AutocommitDmlMode
@@ -37,6 +41,7 @@ from tests.mockserver_tests.mock_spanner import (
     start_mock_server,
 )
 from tests.mockserver_tests.mock_database_admin import DatabaseAdminServicer
+from tests.mockserver_tests.mock_instance_admin import InstanceAdminServicer
 from tests.settings import DATABASES
 
 
@@ -152,10 +157,48 @@ def add_singer_query_result(sql: str):
     add_result(sql, result)
 
 
+def start_mock_server() -> (
+    grpc.Server,
+    SpannerServicer,
+    DatabaseAdminServicer,
+    InstanceAdminServicer,
+    int,
+):
+    # Create a gRPC server.
+    spanner_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+
+    # Add the Spanner services to the gRPC server.
+    spanner_servicer = SpannerServicer()
+    spanner_grpc.add_SpannerServicer_to_server(
+        spanner_servicer, spanner_server
+    )
+    database_admin_servicer = DatabaseAdminServicer()
+    database_admin_grpc.add_DatabaseAdminServicer_to_server(
+        database_admin_servicer, spanner_server
+    )
+    instance_admin_servicer = InstanceAdminServicer()
+    instance_admin_grpc.add_InstanceAdminServicer_to_server(
+        instance_admin_servicer, spanner_server
+    )
+
+    # Start the server on a random port.
+    port = spanner_server.add_insecure_port("localhost:0")
+    spanner_server.start()
+
+    return (
+        spanner_server,
+        spanner_servicer,
+        database_admin_servicer,
+        instance_admin_servicer,
+        port,
+    )
+
+
 class MockServerTestBase(unittest.TestCase):
     server: grpc.Server = None
     spanner_service: SpannerServicer = None
     database_admin_service: DatabaseAdminServicer = None
+    instance_admin_service: InstanceAdminServicer = None
     port: int = None
     _client = None
     _instance = None
@@ -169,6 +212,7 @@ class MockServerTestBase(unittest.TestCase):
             MockServerTestBase.server,
             MockServerTestBase.spanner_service,
             MockServerTestBase.database_admin_service,
+            MockServerTestBase.instance_admin_service,
             MockServerTestBase.port,
         ) = start_mock_server()
 
@@ -192,6 +236,7 @@ class MockServerTestBase(unittest.TestCase):
                 connections[db].close()
         MockServerTestBase.spanner_service.clear_requests()
         MockServerTestBase.database_admin_service.clear_requests()
+        MockServerTestBase.instance_admin_service.clear_requests()
         self._client = None
         self._instance = None
         self._database = None

@@ -28,6 +28,13 @@ if os.getenv(
 
     config = f"{client.project_name}/instanceConfigs/regional-us-central1"
 
-    instance = client.instance("google-cloud-django-backend-tests", config)
-    created_op = instance.create()
-    created_op.result(30)  # block until completion
+    instance_id = os.getenv("SPANNER_TEST_INSTANCE", "google-cloud-django-backend-tests")
+    instance = client.instance(instance_id, config)
+    try:
+        created_op = instance.create()
+        created_op.result(30)  # block until completion
+    except Exception as e:
+        if "409" in str(e) or "AlreadyExists" in str(e):
+            print(f"Instance {instance_id} already exists.")
+        else:
+            raise

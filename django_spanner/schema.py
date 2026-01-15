@@ -138,7 +138,11 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
                 for constraint in (*column_sqls, *constraints)
                 if constraint
             ),
-            "primary_key": self.quote_name(model._meta.pk.column),
+            "primary_key": ", ".join(
+                self.quote_name(column) for column in model._meta.pk.columns
+            )
+            if not model._meta.pk.column
+            else self.quote_name(model._meta.pk.column),
         }
         if model._meta.db_tablespace:
             tablespace_sql = self.connection.ops.tablespace_sql(

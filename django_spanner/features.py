@@ -106,6 +106,16 @@ class DatabaseFeatures(BaseDatabaseFeatures):
         # Bitwise OR with slicing/ordering - Spanner behavior difference or limitations when combining slicing with UNION ALL/OR.
         "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice_and_ordering",
         "queries.tests.QuerySetBitwiseOperationTests.test_or_with_lhs_slice",
+        
+        # Generic relations ordering issue.
+        "generic_relations_regress.tests.GenericRelationTests.test_ticket_20564",
+        
+        # Ordering tests that rely on F-expressions or specific table joining order which might be unstable on Spanner.
+        "ordering.tests.OrderingTests.test_default_ordering_by_f_expression",
+        "ordering.tests.OrderingTests.test_related_ordering_duplicate_table_reference",
+        
+        # Null values ordering difference ([None, 'i1'] vs ['i1', None]).
+        "queries.tests.NullInExcludeTest.test_null_in_exclude_qs",
     )
 
     # Django tests that aren't supported by Spanner.

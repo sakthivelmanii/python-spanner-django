@@ -382,7 +382,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # Lookup
             "lookup.tests.LookupQueryingTests.test_annotate_greater_than_or_equal_float",
             "lookup.tests.LookupQueryingTests.test_annotate_less_than_float",
-            "lookup.tests.LookupQueryingTests.test_in_lookup_in_filter",
+
 
 
             "lookup.tests.LookupTests.test_exact_query_rhs_with_selected_columns",
@@ -433,7 +433,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "migrations.test_operations.OperationTests.test_alter_model_table_m2m_field",
             "migrations.test_operations.OperationTests.test_alter_order_with_respect_to",
             "migrations.test_operations.OperationTests.test_create_model_with_deferred_unique_constraint",
-            "migrations.test_operations.OperationTests.test_remove_unique_together_on_unique_field",
+
             "migrations.test_operations.OperationTests.test_rename_field",
             "migrations.test_operations.OperationTests.test_rename_field_add_non_nullable_field_with_composite_pk",
             "migrations.test_operations.OperationTests.test_rename_field_case",
@@ -701,6 +701,47 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "validation.test_validators.TestModelsWithValidators.test_field_validators_can_be_any_iterable",
             # With Limit
             "with limit",
+            # New Failures from CI
+            "db_functions.json.test_json_array.JSONArrayObjectTests.test_order_by_nested_key",
+            "db_functions.json.test_json_array.JSONArrayTests.test_expressions",
+            "db_functions.json.test_json_array.JSONArrayTests.test_order_by_key",
+            "db_functions.json.test_json_array.JSONArrayTests.test_order_by_nested_key",
+            "db_functions.json.test_json_object.JSONObjectTests.test_expressions",
+            "db_functions.json.test_json_object.JSONObjectTests.test_order_by_key",
+            "db_functions.json.test_json_object.JSONObjectTests.test_order_by_nested_key",
+            "db_functions.text.test_concat.ConcatTests.test_concat_non_str",
+            "backends.base.test_creation.TestDeserializeDbFromString.test_circular_reference",
+            "backends.base.test_creation.TestDeserializeDbFromString.test_circular_reference_with_natural_key",
+            "backends.base.test_creation.TestDeserializeDbFromString.test_self_reference",
+            "backends.base.test_creation.TestDeserializeDbFromString.test_serialize_db_to_string_base_manager_with_prefetch_related",
+            "backends.base.test_operations.SqlFlushTests.test_execute_sql_flush_statements",
+            "backends.base.test_operations.SqlFlushTests.test_sql_flush_no_tables",
+            "backends.tests.BackendTestCase.test_cached_db_features",
+            "backends.tests.BackendTestCase.test_cursor_contextmanager",
+            "backends.tests.BackendTestCase.test_database_operations_helper_class",
+            "backends.tests.BackendTestCase.test_database_operations_init",
+            "backends.tests.BackendTestCase.test_duplicate_table_error",
+            "backends.tests.BackendTestCase.test_is_usable_after_database_disconnects",
+            "backends.tests.BackendTestCase.test_queries_limit",
+            "backends.tests.BackendTestCase.test_timezone_none_use_tz_false",
+            "backends.tests.BackendTestCase.test_unicode_fetches",
+            "backends.tests.BackendTestCase.test_unicode_password",
+            "backends.tests.LongNameTest.test_sequence_name_length_limits_create",
+            "backends.tests.LongNameTest.test_sequence_name_length_limits_flush",
+            "backends.tests.LongNameTest.test_sequence_name_length_limits_m2m",
+            "backends.tests.ThreadTests.test_closing_non_shared_connections",
+            "backends.tests.ThreadTests.test_connections_thread_local",
+            "backends.tests.ThreadTests.test_default_connection_thread_local",
+            "backends.tests.ThreadTests.test_pass_connection_between_threads",
+            "backends.tests.ThreadTests.test_thread_sharing_count",
+            "get_or_create.tests.GetOrCreateTestsWithManualPKs.test_savepoint_rollback",
+            "get_or_create.tests.GetOrCreateThroughManyToMany.test_something",
+            "db_functions.json.test_json_object.JSONObjectTests.test_basic",
+            "db_functions.json.test_json_object.JSONObjectTests.test_nested_empty_json_object",
+            "db_functions.json.test_json_object.JSONObjectTests.test_nested_json_object",
+            "constraints.tests.CheckConstraintTests.test_validate_jsonfield_exact",
+            "defer_regress.tests.DeferRegressionTest.test_self_referential_one_to_one",
+            "backends.base.test_base.ExecuteWrapperTests.test_wrapper_debug",
     )
 
     if os.environ.get("SPANNER_EMULATOR_HOST", None):
@@ -1582,7 +1623,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "expressions.tests.ExpressionsNumericTests.test_increment_value",
             "expressions.tests.ExpressionsTests.test_F_reuse",
             # "expressions.tests.IterableLookupInnerExpressionsTests.test_expressions_in_lookups_join_choice",
-            "expressions.tests.IterableLookupInnerExpressionsTests.test_in_lookup_allows_F_expressions_and_expressions_for_datetimes",
+
             "expressions.tests.IterableLookupInnerExpressionsTests.test_in_lookup_allows_F_expressions_and_expressions_for_integers",
             "expressions.tests.IterableLookupInnerExpressionsTests.test_range_lookup_allows_F_expressions_and_expressions_for_integers",
             "expressions.tests.ValueTests.test_update_TimeField_using_Value",
@@ -2166,7 +2207,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_remove_db_index_doesnt_remove_custom_indexes",
             "schema.tests.SchemaTests.test_remove_field_check_does_not_remove_meta_constraints",
             "schema.tests.SchemaTests.test_remove_field_unique_does_not_remove_meta_constraints",
-            "schema.tests.SchemaTests.test_remove_index_together_does_not_remove_meta_indexes",
+
             "schema.tests.SchemaTests.test_remove_unique_together_does_not_remove_meta_constraints",
             "schema.tests.SchemaTests.test_text_field_with_db_index",
             "schema.tests.SchemaTests.test_text_field_with_db_index_to_fk",

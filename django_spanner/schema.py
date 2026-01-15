@@ -580,8 +580,16 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         # "DROP TABLE" command which fails on Spanner if the table has indices.
         # We intercept this command and drop indices first.
         # Pattern detection based on sql_delete_table = "DROP TABLE %(table)s"
-        pattern = re.escape(self.sql_delete_table) % {"table": r"(?P<table_name>.+)"}
-        match = re.search(pattern, sql)
+        # We cannot use re.escape on the format string directly because it breaks % formatting.
+        # Instead, we format with a placeholder first.
+        placeholder = "DJANGO_SPANNER_TABLE_PLACEHOLDER"
+        temp_sql = self.sql_delete_table % {"table": placeholder}
+        # Escape the SQL template
+        pattern_str = re.escape(temp_sql)
+        # Replace the escaped placeholder with the regex group
+        pattern_str = pattern_str.replace(re.escape(placeholder), r"(?P<table_name>.+)")
+        
+        match = re.search(pattern_str, sql)
         if match:
             table_name = match.group("table_name")
             # If table name is quoted, strip quotes

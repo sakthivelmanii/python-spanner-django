@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file or at
 # https://developers.google.com/open-source/licenses/bsd
+import re
 import os
 import uuid
 
@@ -573,3 +574,45 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     def skip_default(self, field):
         """Cloud Spanner doesn't support column defaults."""
         return True
+    def execute(self, sql, params=()):
+        # Hack: The Django test suite's `cleanup_test_tables` method sends a raw
+        # "DROP TABLE" command which fails on Spanner if the table has indices.
+        # We intercept this command and drop indices first.
+        # Pattern detection based on sql_delete_table = "DROP TABLE %(table)s"
+        pattern = re.escape(self.sql_delete_table) % {"table": r"(?P<table_name>.+)"}
+        match = re.search(pattern, sql)
+        if match:
+            table_name = match.group("table_name")
+            # If table name is quoted, strip quotes
+            table_name = table_name.strip(self.quote_name(""))
+            self._drop_constraints_for_table(table_name)
+        
+        super().execute(sql, params)
+
+    def _drop_constraints_for_table(self, table_name):
+        """
+        Drop all constraints and indices for the given table.
+        """
+        constraints = self.connection.introspection.get_constraints(
+            self.connection.cursor(), table_name
+        )
+        for name, details in constraints.items():
+            if details["foreign_key"]:
+                self.execute(
+                    self.sql_delete_fk
+                    % {
+                        "table": self.quote_name(table_name),
+                        "name": self.quote_name(name),
+                    }
+                )
+        
+        for name, details in constraints.items():
+            if details["index"] or details["unique"]:
+                # Primary keys are dropped with the table, no need to drop them explicitly
+                if details["primary_key"]:
+                    continue
+                # Foreign keys already dropped
+                if details["foreign_key"]:
+                    continue
+
+                self.execute(self.sql_delete_unique % {"name": self.quote_name(name)})

@@ -85,6 +85,8 @@ class DatabaseOperations(BaseDatabaseOperations):
         :rtype: :class:`str`
         :returns: Name escaped if it has to be escaped.
         """
+        if name is None:
+            return name
         if os.environ.get("RUNNING_SPANNER_BACKEND_TESTS") == "1":
             name = name.replace(" ", "_").replace("-", "_")
         if name.startswith("_"):

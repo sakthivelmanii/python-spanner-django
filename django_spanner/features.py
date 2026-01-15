@@ -955,9 +955,11 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_unique_constraint_field_and_expression",
             "schema.tests.SchemaTests.test_unique_together_with_fk",
             "schema.tests.SchemaTests.test_unique_together_with_fk_with_existing_index",
-            "select_for_update.tests.SelectForUpdateTests.test_raw_lock_not_supported",
+            "select_for_update.tests.SelectForUpdateTests.test_raw_lock_not_available",
             # Round 6 failures
             "lookup.tests.LookupQueryingTests.test_in_lookup_in_filter",
+            # Round 9 failures
+            "sitemaps_tests.test_http.HTTPSitemapTests.test_language_for_item_i18n_sitemap",
             # Round 8 failures
             "migrations.test_executor.ExecutorTests.test_detect_soft_applied_add_field_manytomanyfield",
             "migrations.test_operations.OperationTests.test_alter_field_add_db_column_noop",

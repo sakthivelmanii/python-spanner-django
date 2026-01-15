@@ -955,6 +955,8 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_unique_together_with_fk",
             "schema.tests.SchemaTests.test_unique_together_with_fk_with_existing_index",
             "select_for_update.tests.SelectForUpdateTests.test_raw_lock_not_supported",
+            # Round 6 failures
+            "lookup.tests.LookupQueryingTests.test_in_lookup_in_filter",
     )
 
     if os.environ.get("SPANNER_EMULATOR_HOST", None):

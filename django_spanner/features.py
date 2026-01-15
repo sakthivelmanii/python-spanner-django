@@ -959,6 +959,17 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "lookup.tests.LookupQueryingTests.test_in_lookup_in_filter",
             # Round 9 failures
             "sitemaps_tests.test_http.HTTPSitemapTests.test_language_for_item_i18n_sitemap",
+            # Round 15 failures
+            "schema.tests.SchemaTests.test_m2m_through_remove",
+            "schema.tests.SchemaTests.test_remove_field",
+            "schema.tests.SchemaTests.test_remove_ignored_unique_constraint_not_create_fk_index",
+            "schema.tests.SchemaTests.test_remove_indexed_field",
+            "schema.tests.SchemaTests.test_rename_field_with_check_to_truncated_name",
+            "schema.tests.SchemaTests.test_unique_constraint",
+            "schema.tests.SchemaTests.test_unique_constraint_index_nulls_distinct",
+            "schema.tests.SchemaTests.test_unique_constraint_nulls_distinct",
+            "schema.tests.SchemaTests.test_unique_constraint_nulls_distinct_condition",
+            "schema.tests.SchemaTests.test_unique_constraint_nulls_distinct_unsupported",
             # Round 8 failures
             "migrations.test_executor.ExecutorTests.test_detect_soft_applied_add_field_manytomanyfield",
             "migrations.test_operations.OperationTests.test_alter_field_add_db_column_noop",

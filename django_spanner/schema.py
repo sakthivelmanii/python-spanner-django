@@ -574,6 +574,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     def skip_default(self, field):
         """Cloud Spanner doesn't support column defaults."""
         return True
+
     def execute(self, sql, params=()):
         # Hack: The Django test suite's `cleanup_test_tables` method sends a raw
         # "DROP TABLE" command which fails on Spanner if the table has indices.

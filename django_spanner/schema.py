@@ -589,12 +589,13 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         # Replace the escaped placeholder with the regex group
         pattern_str = pattern_str.replace(re.escape(placeholder), r"(?P<table_name>.+)")
         
-        match = re.search(pattern_str, sql)
-        if match:
-            table_name = match.group("table_name")
-            # If table name is quoted, strip quotes
-            table_name = table_name.strip(self.quote_name(""))
-            self._drop_constraints_for_table(table_name)
+        if isinstance(sql, str):
+            match = re.search(pattern_str, sql)
+            if match:
+                table_name = match.group("table_name")
+                # If table name is quoted, strip quotes
+                table_name = table_name.strip(self.quote_name(""))
+                self._drop_constraints_for_table(table_name)
         
         super().execute(sql, params)
 

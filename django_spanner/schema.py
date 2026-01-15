@@ -62,6 +62,12 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         :param model: A model for creating a table.
         """
         # Create column SQL, add FK deferreds if needed
+        # Spanner only supports tables with [a-zA-Z0-9_] names (and starting with letter)
+        import re
+        if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', model._meta.db_table):
+            print(f"Skipping creation of invalid table name for Spanner: {model._meta.db_table}")
+            return
+
         column_sqls = []
         params = []
         for field in model._meta.local_fields:
@@ -72,14 +78,26 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
             # Check constraints can go on the column SQL here
             db_params = field.db_parameters(connection=self.connection)
             if db_params["check"]:
+                check_sql = self.sql_check_constraint % db_params
+                # Check constraints for PositiveIntegerFields and others might not quote the column name.
+                # We expect simple constraints like "column >= 0" for these types.
+                # If the column name is a reserved word (e.g. 'order'), it must be quoted.
+                quoted_column = self.quote_name(field.column)
+                if field.column in check_sql and quoted_column not in check_sql:
+                    # Use regex to replace whole word only to avoid partial matches on other keywords
+                    import re
+                    # Escape column for regex
+                    escaped_col = re.escape(field.column)
+                    check_sql = re.sub(r'\b' + escaped_col + r'\b', quoted_column, check_sql)
+
                 definition += (
                     ", CONSTRAINT constraint_%s_%s_%s "
                     % (
                         model._meta.db_table,
-                        self.quote_name(field.name),
+                        field.name,
                         uuid.uuid4().hex[:6].lower(),
                     )
-                    + self.sql_check_constraint % db_params
+                    + check_sql
                 )
             # Autoincrement SQL (for backends with inline variant)
             col_type_suffix = field.db_type_suffix(connection=self.connection)
@@ -253,14 +271,26 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         # Check constraints can go on the column SQL here
         db_params = field.db_parameters(connection=self.connection)
         if db_params["check"]:
+            check_sql = self.sql_check_constraint % db_params
+            # Check constraints for PositiveIntegerFields and others might not quote the column name.
+            # We expect simple constraints like "column >= 0" for these types.
+            # If the column name is a reserved word (e.g. 'order'), it must be quoted.
+            quoted_column = self.quote_name(field.column)
+            if field.column in check_sql and quoted_column not in check_sql:
+                # Use regex to replace whole word only to avoid partial matches on other keywords
+                import re
+                # Escape column for regex
+                escaped_col = re.escape(field.column)
+                check_sql = re.sub(r'\b' + escaped_col + r'\b', quoted_column, check_sql)
+
             definition += (
                 ", CONSTRAINT constraint_%s_%s_%s "
                 % (
                     model._meta.db_table,
-                    self.quote_name(field.name),
+                    field.name,
                     uuid.uuid4().hex[:6].lower(),
                 )
-                + self.sql_check_constraint % db_params
+                + check_sql
             )
         # Build the SQL and run it
         sql = self.sql_create_column % {

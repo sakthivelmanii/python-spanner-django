@@ -36,6 +36,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_json_field = True
     supports_column_check_constraints = True
     supports_table_check_constraints = not USE_EMULATOR
+    supports_composite_primary_keys = False
     supports_primitives_in_json_field = False
     # Spanner does not support order by null modifiers.
     supports_order_by_nulls_modifier = False

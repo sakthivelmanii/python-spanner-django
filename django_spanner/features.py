@@ -943,8 +943,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
 
             "schema.tests.SchemaTests.test_indexes",
 
-            "schema.tests.SchemaTests.test_remove_field_check_associated_with_col",
-            "schema.tests.SchemaTests.test_remove_field_unique_associated_with_col",
+
             "schema.tests.SchemaTests.test_remove_ignored_unique_together",
             "schema.tests.SchemaTests.test_rename_column_renames_deferred_sql_references",
             "schema.tests.SchemaTests.test_rename_keep_db_default",

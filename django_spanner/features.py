@@ -940,7 +940,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_func_index_nondeterministic",
             "schema.tests.SchemaTests.test_func_index_nonexistent_field",
             "schema.tests.SchemaTests.test_func_index_unsupported",
-            "schema.tests.SchemaTests.test_index_together_with_fk",
+
             "schema.tests.SchemaTests.test_indexes",
             "schema.tests.SchemaTests.test_remove_db_default",
             "schema.tests.SchemaTests.test_remove_field_check_associated_with_col",

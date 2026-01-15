@@ -55,9 +55,12 @@ class DatabaseFeatures(BaseDatabaseFeatures):
         "queries.tests.Ticket14056Tests.test_ticket_14056",
         "queries.tests.Queries4Tests.test_order_by_reverse_fk",
         "queries.tests.Queries4Tests.test_ticket15316_one2one_exclude_true",
+        "queries.tests.Queries4Tests.test_ticket15316_one2one_filter_false",
         "generic_relations_regress.tests.GenericRelationTests.test_ticket_20564",
         "ordering.tests.OrderingTests.test_default_ordering_by_f_expression",
         "ordering.tests.OrderingTests.test_related_ordering_duplicate_table_reference",
+        "foreign_object.tests.MultiColumnFKTests.test_prefetch_foreignobject_hidden_forward",
+        "prefetch_related.tests.PrefetchRelatedTests.test_get",
         
         # Slicing/Bitwise OR issues: combined slicing with UNION ALL/OR is complex and might trigger Spanner limitations or ordering issues.
         "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice",

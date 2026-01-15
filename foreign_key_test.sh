@@ -6,12 +6,11 @@ export PYTHONUNBUFFERED=1
 
 # Install dependencies
 pip install --upgrade pip setuptools
-pip install . --no-build-isolation
+pip install -e . --no-build-isolation
 pip install "django~=5.2"
 
 # Create Spanner Instance and Database
 python3 create_test_instance.py
-
 python3 create_test_database.py
 
 
@@ -28,7 +27,7 @@ trap "rm -rf django_test" EXIT
 mkdir django_test
 cd django_test
 
-django-admin startproject foreign_keys
+python3 -m django startproject foreign_keys
 cd foreign_keys
 python3 manage.py startapp applic
 
@@ -87,4 +86,4 @@ EOF
 
 # Run Migrations and Tests
 python3 manage.py makemigrations
-python3 manage.py test applic
+python3 manage.py test applic --noinput

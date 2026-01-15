@@ -52,8 +52,17 @@ class DatabaseFeatures(BaseDatabaseFeatures):
         # Spanner does not guarantee insertion order. These tests rely on implicit ordering.
         "queries.tests.Queries1Tests.test_tickets_2076_7256",
         "queries.tests.Queries5Tests.test_ordering",
-        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice",
         "queries.tests.Ticket14056Tests.test_ticket_14056",
+        "queries.tests.Queries4Tests.test_order_by_reverse_fk",
+        "queries.tests.Queries4Tests.test_ticket15316_one2one_exclude_true",
+        "generic_relations_regress.tests.GenericRelationTests.test_ticket_20564",
+        "ordering.tests.OrderingTests.test_default_ordering_by_f_expression",
+        "ordering.tests.OrderingTests.test_related_ordering_duplicate_table_reference",
+        
+        # Slicing/Bitwise OR issues: combined slicing with UNION ALL/OR is complex and might trigger Spanner limitations or ordering issues.
+        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice",
+        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice_and_ordering",
+        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_lhs_slice",
         
         # Fixture loading fails because Spanner does not support deferred constraint checks (which are often needed for forward references)
         # or has transaction limits that interrupt large loads.
@@ -92,30 +101,13 @@ class DatabaseFeatures(BaseDatabaseFeatures):
         
         # Spanner does not support NULLS LAST/FIRST in the standard way (requires emulation), causing ordering mismatch.
         "ordering.tests.OrderingTests.test_order_by_nulls_last",
+        "queries.tests.NullInExcludeTest.test_null_in_exclude_qs",
         
         # Sitemap test fails on alternate links, possibly due to URL generation or I18N configuration differences.
         "sitemaps_tests.test_http.HTTPSitemapTests.test_alternate_language_for_item_i18n_sitemap",
         
         # Queries with None as NULL checks might be generating SQL that Spanner dislikes or evaluates differently.
         "null_queries.tests.NullQueriesTests.test_none_as_null",
-
-        # Ordering issues: Spanner does not guarantee order without explicit ORDER BY, and reverse FK ordering might be unstable.
-        "queries.tests.Queries4Tests.test_order_by_reverse_fk",
-        "queries.tests.Queries4Tests.test_ticket15316_one2one_exclude_true",
-
-        # Bitwise OR with slicing/ordering - Spanner behavior difference or limitations when combining slicing with UNION ALL/OR.
-        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_both_slice_and_ordering",
-        "queries.tests.QuerySetBitwiseOperationTests.test_or_with_lhs_slice",
-        
-        # Generic relations ordering issue.
-        "generic_relations_regress.tests.GenericRelationTests.test_ticket_20564",
-        
-        # Ordering tests that rely on F-expressions or specific table joining order which might be unstable on Spanner.
-        "ordering.tests.OrderingTests.test_default_ordering_by_f_expression",
-        "ordering.tests.OrderingTests.test_related_ordering_duplicate_table_reference",
-        
-        # Null values ordering difference ([None, 'i1'] vs ['i1', None]).
-        "queries.tests.NullInExcludeTest.test_null_in_exclude_qs",
     )
 
     # Django tests that aren't supported by Spanner.

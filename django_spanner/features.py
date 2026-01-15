@@ -3,14 +3,10 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file or at
 # https://developers.google.com/open-source/licenses/bsd
-
 import os
-
 from django.db.backends.base.features import BaseDatabaseFeatures
 from django.db.utils import InterfaceError
 from django_spanner import USE_EMULATOR
-
-
 class DatabaseFeatures(BaseDatabaseFeatures):
     can_introspect_big_integer_field = False
     can_introspect_duration_field = False
@@ -47,7 +43,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     # Spanner does not support expression indexes
     # example: CREATE INDEX index_name ON table (LOWER(column_name))
     supports_expression_indexes = False
-
     # Django tests that aren't supported by Spanner.
     skip_tests = (
             # Admin Filters
@@ -172,7 +167,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # Db Functions
             "db_functions.comparison.test_cast.CastTests.test_cast_from_db_date_to_datetime",
             "db_functions.comparison.test_cast.CastTests.test_cast_to_decimal_field",
-
             "db_functions.datetime.test_extract_trunc.DateFunctionTests.test_extract_func",
             "db_functions.datetime.test_extract_trunc.DateFunctionTests.test_extract_iso_weekday_func",
             "db_functions.datetime.test_extract_trunc.DateFunctionTests.test_extract_lookup_name_sql_injection",
@@ -182,7 +176,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_func_with_timezone",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_iso_weekday_func",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_extract_lookup_name_sql_injection",
-
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_func_with_timezone",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_lookup_name_sql_injection",
             "db_functions.datetime.test_extract_trunc.DateFunctionWithTimeZoneTests.test_trunc_time_comparison",
@@ -368,9 +361,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # Lookup
             "lookup.tests.LookupQueryingTests.test_annotate_greater_than_or_equal_float",
             "lookup.tests.LookupQueryingTests.test_annotate_less_than_float",
-
-
-
             "lookup.tests.LookupTests.test_exact_query_rhs_with_selected_columns",
             "lookup.tests.LookupTests.test_get_next_previous_by",
             "lookup.tests.LookupTests.test_in_ignore_none",
@@ -418,7 +408,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "migrations.test_operations.OperationTests.test_alter_model_table_m2m_field",
             "migrations.test_operations.OperationTests.test_alter_order_with_respect_to",
             "migrations.test_operations.OperationTests.test_create_model_with_deferred_unique_constraint",
-
             "migrations.test_operations.OperationTests.test_rename_field",
             "migrations.test_operations.OperationTests.test_rename_field_add_non_nullable_field_with_composite_pk",
             "migrations.test_operations.OperationTests.test_rename_field_case",
@@ -893,11 +882,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_func_index_nondeterministic",
             "schema.tests.SchemaTests.test_func_index_nonexistent_field",
             "schema.tests.SchemaTests.test_func_index_unsupported",
-
             "schema.tests.SchemaTests.test_indexes",
-
-
-
             "schema.tests.SchemaTests.test_rename_column_renames_deferred_sql_references",
             "schema.tests.SchemaTests.test_rename_keep_db_default",
             "schema.tests.SchemaTests.test_rename_referenced_field",
@@ -968,17 +953,10 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "migrations.test_operations.OperationTests.test_run_sql_backward_reverse_sql_required",
             "migrations.test_operations.OperationTests.test_smallfield_autofield_foreignfield_growth",
     )
-
     if os.environ.get("SPANNER_EMULATOR_HOST", None):
         # Some code isn't yet supported by the Spanner emulator.
         skip_tests += (
             # Admin Changelist
-
-
-
-
-
-
             # Admin Changelist Atomicity
             "admin_changelist.tests.ChangeListTests.test_list_editable_atomicity",
             # Admin Custom Urls
@@ -1003,9 +981,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "admin_docs.test_views.TestModelDetailView.test_model_with_many_to_one",
             "admin_docs.test_views.TestModelDetailView.test_model_with_no_backward_relations_render_only_relevant_fields",
             # Admin Filters
-
-
-
             "admin_inlines.tests.TestInlinePermissions.test_inline_add_fk_add_perm",
             "admin_inlines.tests.TestInlinePermissions.test_inline_add_fk_noperm",
             "admin_inlines.tests.TestInlinePermissions.test_inline_add_m2m_add_perm",
@@ -1036,26 +1011,12 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             # Syntax error in CHECK constraint (reserved keyword "order" not quoted)
             "admin_views.test_multidb.MultiDatabaseTests.test_delete_view",
             # Aggregation
-
-
-
-
             # Aggregation Ordering Issue
             "aggregation.tests.AggregateTestCase.test_ticket12886",
-
-
-
-
-
-
-
-
-
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_label_not_set",
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_defaults_to_254",
             "auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_matches_user_model",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_both_passwords",
-
             "auth_tests.test_forms.CustomUserCreationFormTest.test_custom_form_with_different_username_field",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_duplicate_normalized_unicode",
             "auth_tests.test_forms.BaseUserCreationFormTest.test_html_autocomplete_attributes",
@@ -1065,13 +1026,11 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "auth_tests.test_forms.PasswordChangeFormTest.test_incorrect_password",
             "auth_tests.test_forms.PasswordResetFormTest.test_nonexistent_email",
             "auth_tests.test_forms.PasswordResetFormTest.test_preserve_username_case",
-
             "auth_tests.test_handlers.ModWsgiHandlerTestCase.test_check_password_custom_user",
             "auth_tests.test_handlers.ModWsgiHandlerTestCase.test_groups_for_user",
             "auth_tests.test_management.ChangepasswordManagementCommandTestCase.test_get_pass",
             "auth_tests.test_management.ChangepasswordManagementCommandTestCase.test_get_pass_no_input",
             "auth_tests.test_management.ChangepasswordManagementCommandTestCase.test_nonexistent_username",
-
             "auth_tests.test_management.CreatesuperuserManagementCommandTestCase.test_verbosity_zero",
             "auth_tests.test_management.GetDefaultUsernameTestCase.test_existing",
             "auth_tests.test_management.GetDefaultUsernameTestCase.test_with_database",
@@ -1110,8 +1069,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "auth_tests.test_models.UserWithPermTestCase.test_custom_backend",
             "auth_tests.test_models.UserWithPermTestCase.test_custom_backend_pass_obj",
             "auth_tests.test_models.UserWithPermTestCase.test_invalid_backend_type",
-
-
             "auth_tests.test_tokens.TokenGeneratorTest.test_check_token_with_nonexistent_token_and_user",
             "auth_tests.test_tokens.TokenGeneratorTest.test_make_token",
             "auth_tests.test_tokens.TokenGeneratorTest.test_timeout",
@@ -1156,7 +1113,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "db_functions.math.test_power.PowerTests.test_float",
             "db_functions.math.test_power.PowerTests.test_integer",
             "db_functions.math.test_power.PowerTests.test_null",
-
             "delete_regress.tests.DeleteLockingTest.test_concurrent_delete",
             # Empty
             "empty.tests.EmptyModelTests.test_empty",
@@ -1200,7 +1156,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "expressions.tests.ExpressionsNumericTests.test_increment_value",
             "expressions.tests.ExpressionsTests.test_F_reuse",
             # "expressions.tests.IterableLookupInnerExpressionsTests.test_expressions_in_lookups_join_choice",
-
             "expressions.tests.IterableLookupInnerExpressionsTests.test_in_lookup_allows_F_expressions_and_expressions_for_integers",
             "expressions.tests.IterableLookupInnerExpressionsTests.test_range_lookup_allows_F_expressions_and_expressions_for_integers",
             "expressions.tests.ValueTests.test_update_TimeField_using_Value",
@@ -1420,7 +1375,6 @@ class DatabaseFeatures(BaseDatabaseFeatures):
             "schema.tests.SchemaTests.test_remove_db_index_doesnt_remove_custom_indexes",
             "schema.tests.SchemaTests.test_remove_field_check_does_not_remove_meta_constraints",
             "schema.tests.SchemaTests.test_remove_field_unique_does_not_remove_meta_constraints",
-
             "schema.tests.SchemaTests.test_remove_unique_together_does_not_remove_meta_constraints",
             "schema.tests.SchemaTests.test_text_field_with_db_index",
             "schema.tests.SchemaTests.test_text_field_with_db_index_to_fk",

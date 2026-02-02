@@ -56,6 +56,9 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     # example: CREATE INDEX index_name ON table (LOWER(column_name))
     supports_expression_indexes = False
 
+    # Spanner does not support retrieving rows values after an insert.
+    can_return_columns_from_insert = False
+
     # Django tests that aren't supported by Spanner.
     skip_tests = (
         # Spanner does not support very long FK name: 400 Foreign Key name not valid

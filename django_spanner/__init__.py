@@ -51,7 +51,7 @@ from django.db.models import JSONField
 USE_EMULATOR = os.getenv("SPANNER_EMULATOR_HOST") is not None
 
 # Only active LTS django versions (3.2.*, 4.2.*) are supported by this library right now.
-SUPPORTED_DJANGO_VERSIONS = [(3, 2), (4, 2)]
+SUPPORTED_DJANGO_VERSIONS = [(3, 2), (4, 2), (5, 2)]
 
 check_django_compatability(SUPPORTED_DJANGO_VERSIONS)
 register_functions()
@@ -89,15 +89,9 @@ def autofield_init(self, *args, **kwargs):
 
 
 AutoField.__init__ = autofield_init
-AutoField.db_returning = False
-AutoField.validators = []
 
 SmallAutoField.__init__ = autofield_init
 BigAutoField.__init__ = autofield_init
-SmallAutoField.db_returning = False
-BigAutoField.db_returning = False
-SmallAutoField.validators = []
-BigAutoField.validators = []
 
 
 def get_prep_value(self, value):
